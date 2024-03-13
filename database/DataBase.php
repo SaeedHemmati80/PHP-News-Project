@@ -18,12 +18,43 @@ class DataBase
         try {
             $this->conn = new \PDO("mysql:host=" . $this->dbHost . ";dbname=" . $this->dbName, $this->dbUsername, $this->dbPassword, $this->options);
             echo 'database connected';
-        }
-        catch (\PDOException $e) {
+        } catch (\PDOException $e) {
             echo $e->getMessage();
             exit();
         }
 
+    }
+
+    //////// CRUD ////////
+    // Select
+    public function select($sql, $value)
+    {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            if ($value == null) {
+                $stmt->execute();
+            } else {
+                $stmt->execute($value);
+            }
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+        return $stmt;
+    }
+
+    // Insert
+    public function insert($tableName, $fields, $values)
+    {
+        try {
+            $sql = "INSERT INTO" . $tableName . "(" . implode(', ', $fields) . " ,created_at) VALUES ( :" . implode(', :', $fields) . " , now() );";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array_combine($fields, $values));
+            return true;
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
 }
 
