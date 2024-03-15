@@ -14,11 +14,13 @@ define('DB_PASSWORD', '');
 
 
 require_once 'database/DataBase.php';
-$db = new database\DataBase();
+require_once 'activities/Admin/Category.php';
+
+
 
 
 // Helpers
-///////////////////////////////////////// Routing System //////////////////////////////////////////////////////////////
+// Routing System //////////////////////////////////////////////////////////////
 function uri($reservedUrl, $class, $method, $requestMethod='GET')
 {
     // Current Url Array
@@ -135,6 +137,19 @@ function dd($var)
     var_dump($var);
     exit();
 }
+
+
+// Category
+uri('admin/category', 'Admin\Category', 'index');
+uri('admin/category/create', 'Admin\Category', 'create');
+uri('admin/category/store', 'Admin\Category', 'store', 'POST');
+uri('admin/category/edit/{id}', 'Admin\Category', 'edit');
+uri('admin/category/update/{id}', 'Admin\Category', 'update', 'POST');
+uri('admin/category/delete/{id}', 'Admin\Category', 'delete');
+
+
+echo '404';
+
 
 
 
