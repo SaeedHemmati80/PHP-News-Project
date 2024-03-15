@@ -17,7 +17,6 @@ class DataBase
     {
         try {
             $this->conn = new \PDO("mysql:host=" . $this->dbHost . ";dbname=" . $this->dbName, $this->dbUsername, $this->dbPassword, $this->options);
-            echo 'database connected';
         } catch (\PDOException $e) {
             echo $e->getMessage();
             exit();
@@ -27,7 +26,7 @@ class DataBase
 
     //////// CRUD ////////
     // Select
-    public function select($sql, $value)
+    public function select($sql, $value=null)
     {
         try {
             $stmt = $this->conn->prepare($sql);
@@ -78,16 +77,15 @@ class DataBase
         $sql .= " updated_at = now()";
         $sql .= " WHERE id = ?";
         try{
-            $stmt = $this->connection->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute(array_merge(array_filter(array_values($values)), [$id]));
             return true;
         }
+
         catch(PDOException $e){
             echo $e->getMessage();
             return false;
         }
-
-
     }
 
     // Delete
@@ -96,7 +94,7 @@ class DataBase
     {
         $sql = "DELETE FROM " . $tableName . " WHERE id = ? ;";
         try{
-            $stmt = $this->connection->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute([$id]);
             return true;
         }

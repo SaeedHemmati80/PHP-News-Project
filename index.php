@@ -14,6 +14,7 @@ define('DB_PASSWORD', '');
 
 
 require_once 'database/DataBase.php';
+require_once 'activities/Admin/Admin.php';
 require_once 'activities/Admin/Category.php';
 
 
@@ -21,36 +22,41 @@ require_once 'activities/Admin/Category.php';
 
 // Helpers
 // Routing System //////////////////////////////////////////////////////////////
-function uri($reservedUrl, $class, $method, $requestMethod='GET')
+function uri($reservedUrl, $class, $method, $requestMethod = 'GET')
 {
-    // Current Url Array
+
+    //current url array
     $currentUrl = explode('?', currentUrl())[0];
     $currentUrl = str_replace(CURRENT_DOMAIN, '', $currentUrl);
     $currentUrl = trim($currentUrl, '/');
     $currentUrlArray = explode('/', $currentUrl);
-    $currentUrlArray = array_filter($currentUrlArray); // Resolve empty space
+    $currentUrlArray = array_filter($currentUrlArray);
 
-    // Reserved Url Array
+    //reserved Url array
     $reservedUrl = trim($reservedUrl, '/');
     $reservedUrlArray = explode('/', $reservedUrl);
-    $reservedUrlArray = array_filter($reservedUrlArray); // Resolve empty space
+    $reservedUrlArray = array_filter($reservedUrlArray);
 
-    if(sizeof($currentUrlArray) != sizeof($reservedUrlArray) || methodField() != $requestMethod){
+    if(sizeof($currentUrlArray) != sizeof($reservedUrlArray) || methodField() != $requestMethod)
+    {
         return false;
     }
 
     $parameters = [];
-
-    for ($key = 0; $key<sizeof($currentUrlArray); $key++){
-        if($reservedUrlArray[$key][0] == "{" && $reservedUrlArray[$key][sizeof($reservedUrlArray[$key])-1] == "}"){
-            array_push($parameters, $reservedUrlArray[$key]);
+    for($key = 0; $key < sizeof($currentUrlArray); $key++)
+    {
+        if($reservedUrlArray[$key][0] == "{" && $reservedUrlArray[$key][strlen($reservedUrlArray[$key]) - 1] == "}")
+        {
+            array_push($parameters, $currentUrlArray[$key]);
         }
-        elseif ($reservedUrlArray[$key] !== $currentUrlArray[$key]){
-            return  false;
+        elseif($currentUrlArray[$key] !== $reservedUrlArray[$key])
+        {
+            return false;
         }
     }
 
-    if(methodField() == 'POST'){
+    if(methodField() == 'POST')
+    {
         $request = isset($_FILES) ? array_merge($_POST, $_FILES) : $_POST;
         $parameters = array_merge([$request], $parameters);
     }
@@ -76,6 +82,8 @@ function assets($src)
 {
     return trim(CURRENT_DOMAIN, '/ ') . '/' . trim($src, '/ ');
 }
+
+
 
 // Url
 function url($url)
@@ -139,7 +147,7 @@ function dd($var)
 }
 
 
-// Category
+// Category url
 uri('admin/category', 'Admin\Category', 'index');
 uri('admin/category/create', 'Admin\Category', 'create');
 uri('admin/category/store', 'Admin\Category', 'store', 'POST');
