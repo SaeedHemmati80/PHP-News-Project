@@ -17,6 +17,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.6/css/mdb.min.css" rel="stylesheet">
 
     <link href="<?= assets('/public/admin-panel/css/style.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= assets('/public/babakhani-calender/persian-datepicker.min.css') ?>" rel="stylesheet" type="text/css">
 
 </head>
 
